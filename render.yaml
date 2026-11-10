@@ -1,0 +1,35 @@
+databases:
+  - name: admin-core-db
+    plan: free
+    ipAllowList: []
+
+services:
+  - type: web
+    name: admin-core
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: >-
+      python -m pip install -r requirements.txt &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate --noinput &&
+      python deploy.py
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT
+    healthCheckPath: /admin/login/
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.14.3"
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: admin-core-db
+          property: connectionString
+      - key: LOAD_DEMO_DATA
+        value: "1"
+      - key: DJANGO_SUPERUSER_USERNAME
+        sync: false
+      - key: DJANGO_SUPERUSER_EMAIL
+        sync: false
+      - key: DJANGO_SUPERUSER_PASSWORD
+        sync: false

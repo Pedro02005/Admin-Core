@@ -66,6 +66,16 @@ Desde `backend/`, aplicar las migraciones, crear el superusuario y levantar el s
 
 Entrar a [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) con el superusuario creado.
 
+## Despliegue de la demo en Render
+
+El archivo [`render.yaml`](render.yaml) define un servicio web Django y una base PostgreSQL en el plan gratuito. Render aplica las migraciones, recopila los archivos estáticos y carga [los datos ficticios](backend/datos_demo.sql) durante la compilación. Esto incluye dos complejos, cuatro canchas y sus horarios y tarifas. Para omitir la carga en futuros despliegues, cambia `LOAD_DEMO_DATA` a `0` en el Blueprint.
+
+1. En el [panel de Render](https://dashboard.render.com/), elige **New → Blueprint** y conecta el repositorio de GitHub.
+2. Selecciona la rama que contiene `render.yaml`. En el formulario de Render, ingresa `DJANGO_SUPERUSER_USERNAME`, `DJANGO_SUPERUSER_EMAIL` y una contraseña propia en `DJANGO_SUPERUSER_PASSWORD`. Estas variables crean el usuario en el primer despliegue y puedes quitarlas del entorno después de comprobar que inicia sesión.
+3. Cuando termine el despliegue, agrega `/admin/` a la URL del servicio e inicia sesión. En **Tarifas → Agregar**, cambia entre **Demo Norte** y **Demo Sur** para comprobar el filtro de canchas.
+
+La base PostgreSQL del plan gratuito expira a los 30 días. [Límites del plan gratuito de Render](https://render.com/docs/free)
+
 ## Comprobación manual en el panel
 
 1. En **Usuarios**, intentar guardar un usuario con una cédula como `123`. El formulario debe indicar que se requieren diez dígitos.
