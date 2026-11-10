@@ -131,7 +131,7 @@ class TarifaAdmin(admin.ModelAdmin):
     )
 
     class Media:
-        js = ("complejos/js/tarifas.js",)
+        js = ("complejos/js/tarifa.js",)
 
     def get_urls(self):
 
@@ -159,7 +159,7 @@ class TarifaAdmin(admin.ModelAdmin):
 
         complejo_id = request.GET.get("complejo_id")
 
-        if complejo_id and str(complejo_id).isdigit():
+        if complejo_id and complejo_id.isascii() and complejo_id.isdigit():
             canchas = Cancha.objects.filter(
                 complejo_id=complejo_id
             ).order_by("nombre")
